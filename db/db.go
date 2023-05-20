@@ -1,21 +1,36 @@
 package db
 
 import (
+	"database/sql"
 	"fmt"
 	"gin-boilerplate/config"
-	// Import your database driver here
+	"log"
+
+	_ "github.com/lib/pq"
 )
 
-func InitDB() {
-	// Replace this function with your actual database initialization logic
-	connectionString := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		config.Cfg.DB.Host,
-		config.Cfg.DB.Port,
+func NewDB() (*sql.DB, error) {
+	connectionString := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
 		config.Cfg.DB.User,
 		config.Cfg.DB.Password,
+		config.Cfg.DB.Host,
+		config.Cfg.DB.Port,
 		config.Cfg.DB.Name,
 	)
 
 	fmt.Println("Connecting to database with connection string:", connectionString)
 	// Connect to your database and perform any necessary setup here
+	db, err := sql.Open("postgres", "postgres://user:password@localhost:5432/mydatabase?sslmode=disable")
+	if err != nil {
+		log.Fatal("Failed to connect to the database:", err)
+		return nil, err
+	}
+
+	err = db.Ping()
+	if err != nil {
+		log.Fatal("Failed to ping the database:", err)
+		return nil, err
+	}
+
+	return db, nil
 }

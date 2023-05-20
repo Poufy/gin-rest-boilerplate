@@ -6,6 +6,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ProductRoutes(r *gin.RouterGroup) {
-	r.GET("/products", controllers.GetProducts)
+func SetupProductRoutes(router *gin.RouterGroup, productController *controllers.ProductController) {
+	productRoutes := router.Group("/products")
+	{
+		productRoutes.POST("", productController.CreateProduct)
+		productRoutes.GET("", productController.GetProducts)
+		productRoutes.GET("/:id", productController.GetProduct)
+	}
 }
