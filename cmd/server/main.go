@@ -3,7 +3,7 @@ package main
 import (
 	"gin-boilerplate/config"
 	"gin-boilerplate/controllers"
-	"gin-boilerplate/db"
+	"gin-boilerplate/database"
 	"gin-boilerplate/repositories"
 	"gin-boilerplate/routes"
 	"gin-boilerplate/services"
@@ -12,12 +12,15 @@ import (
 
 func main() {
 	config.LoadConfig()
+	db, err := database.NewDB()
 	// Connect to the database
-	db, err := db.NewDB()
 	if err != nil {
 		log.Fatal("Failed to connect to the database:", err)
 	}
 	defer db.Close()
+
+	// Run database migrations
+	database.RunMigrations(db)
 
 	// Initialize repositories
 	userRepository := repositories.NewUserRepository(db)

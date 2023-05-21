@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"database/sql"
-
 	"gin-boilerplate/models"
 )
 
@@ -17,16 +16,16 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 }
 
 func (ur *UserRepository) CreateUser(user *models.User) (*models.User, error) {
-	result, err := ur.db.Exec("INSERT INTO users (name) VALUES ($1)", user.FirstName)
+	lastInsertId := 0
+	err := ur.db.QueryRow("INSERT INTO users (name, lastname, email) VALUES ($1, $2, $3) RETURNING id", user.FirstName, user.LastName, user.Email).Scan(&lastInsertId)
 
 	if err != nil {
 		return nil, err
 	}
+
 	// Get the ID of the newly inserted user
-	userID, err := result.LastInsertId()
-	if err != nil {
-		return nil, err
-	}
+	userID := lastInsertId
+
 	user.ID = int(userID)
 
 	return user, nil

@@ -1,4 +1,4 @@
-package db
+package database
 
 import (
 	"database/sql"
@@ -17,10 +17,9 @@ func NewDB() (*sql.DB, error) {
 		config.Cfg.DB.Port,
 		config.Cfg.DB.Name,
 	)
-
 	fmt.Println("Connecting to database with connection string:", connectionString)
 	// Connect to your database and perform any necessary setup here
-	db, err := sql.Open("postgres", "postgres://user:password@localhost:5432/mydatabase?sslmode=disable")
+	db, err := sql.Open("postgres", connectionString)
 	if err != nil {
 		log.Fatal("Failed to connect to the database:", err)
 		return nil, err

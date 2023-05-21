@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 
 	"gin-boilerplate/models"
@@ -30,6 +31,7 @@ func (uc *UserController) CreateUser(c *gin.Context) {
 
 	createdUser, err := uc.userService.CreateUser(&user)
 	if err != nil {
+		log.Default().Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
 		return
 	}
