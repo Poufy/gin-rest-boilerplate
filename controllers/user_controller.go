@@ -54,6 +54,7 @@ func (uc *UserController) GetUser(c *gin.Context) {
 
 	user, err := uc.userService.GetUser(userID)
 	if err != nil {
+		log.Default().Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch user"})
 		return
 	}

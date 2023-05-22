@@ -32,7 +32,7 @@ func (ur *UserRepository) CreateUser(user *models.User) (*models.User, error) {
 }
 
 func (ur *UserRepository) GetUsers() ([]models.User, error) {
-	rows, err := ur.db.Query("SELECT id, name FROM users")
+	rows, err := ur.db.Query("SELECT id, name, lastname, email FROM users")
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (ur *UserRepository) GetUsers() ([]models.User, error) {
 	var users []models.User
 	for rows.Next() {
 		var user models.User
-		err := rows.Scan(&user.ID, &user.FirstName)
+		err := rows.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email)
 		if err != nil {
 			return nil, err
 		}
@@ -54,7 +54,7 @@ func (ur *UserRepository) GetUsers() ([]models.User, error) {
 
 func (ur *UserRepository) GetUser(userID string) (*models.User, error) {
 	var user models.User
-	err := ur.db.QueryRow("SELECT id, name FROM users WHERE id = $1", userID).Scan(&user.ID, &user.FirstName)
+	err := ur.db.QueryRow("SELECT id, name, lastname, email FROM users WHERE id = $1", userID).Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email)
 	if err != nil {
 		return nil, err
 	}
