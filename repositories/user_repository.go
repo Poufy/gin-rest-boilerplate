@@ -3,6 +3,8 @@ package repositories
 import (
 	"database/sql"
 	"gin-boilerplate/models"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserRepository struct {
@@ -16,8 +18,15 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 }
 
 func (ur *UserRepository) CreateUser(user *models.User) (*models.User, error) {
+	// Hash the password before storing it in the database
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
+
+	user.Password = string(hashedPassword)
 	lastInsertId := 0
-	err := ur.db.QueryRow("INSERT INTO users (name, lastname, email) VALUES ($1, $2, $3) RETURNING id", user.FirstName, user.LastName, user.Email).Scan(&lastInsertId)
+	err = ur.db.QueryRow("INSERT INTO users (name, lastname, email, password) VALUES ($1, $2, $3, $4) RETURNING id", user.FirstName, user.LastName, user.Email, user.Password).Scan(&lastInsertId)
 
 	if err != nil {
 		return nil, err
@@ -60,4 +69,13 @@ func (ur *UserRepository) GetUser(userID string) (*models.User, error) {
 	}
 
 	return &user, nil
+}
+
+func (ur *UserRepository) GetUserByEmail(email string) (*models.User, error) {
+	user := &models.User{}
+	err := ur.db.QueryRow("SELECT id, name, lastname, email, password FROM users WHERE email = $1", email).Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.Password)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }

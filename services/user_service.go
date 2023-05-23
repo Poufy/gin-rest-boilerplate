@@ -1,8 +1,12 @@
 package services
 
 import (
+	"errors"
+	"gin-boilerplate/middleware"
 	"gin-boilerplate/models"
 	"gin-boilerplate/repositories"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService struct {
@@ -46,4 +50,25 @@ func (us *UserService) GetUser(userID string) (*models.User, error) {
 	}
 
 	return user, nil
+}
+
+func (us *UserService) Login(email, password string) (string, error) {
+	// Fetch the user by email from the UserRepository
+	user, err := us.userRepository.GetUserByEmail(email)
+	if err != nil {
+		return "", err
+	}
+
+	// Compare the provided password with the stored hashed password
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
+		return "", errors.New("Invalid credentials")
+	}
+
+	// Generate a secure authentication token
+	token, err := middleware.GenerateAuthToken(user)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }

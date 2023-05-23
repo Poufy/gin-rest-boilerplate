@@ -11,7 +11,7 @@ func SetupRouter(userController *controllers.UserController, productController *
 	router := gin.Default()
 
 	router.Use(middleware.LoggerMiddleware())
-	router.Use(middleware.AuthMiddleware())
+	// router.Use(middleware.AuthMiddleware())
 
 	api := router.Group("/api")
 	{

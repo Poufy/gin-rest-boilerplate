@@ -19,6 +19,9 @@ type Config struct {
 	SERVER struct {
 		Port string `yaml:"port"`
 	} `yaml:"server"`
+	JWT_SECRET struct {
+		Key string `yaml:"key"`
+	} `yaml:"jwt_secret"`
 }
 
 var Cfg Config
