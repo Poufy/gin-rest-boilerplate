@@ -36,9 +36,9 @@ func AuthMiddleware() gin.HandlerFunc {
 		// Extract the user ID and other claims from the token if needed
 		userID := claims["id"].(float64)
 		email := claims["email"].(string)
-		expirationTime := claims["exp"].(int64)
+		expirationTime := claims["exp"].(float64)
 
-		if time.Now().Unix() > expirationTime {
+		if time.Now().Unix() > int64(expirationTime) {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token has expired"})
 			c.Abort()
 			return

@@ -4,14 +4,11 @@ go 1.20
 
 require (
 	github.com/gin-gonic/gin v1.9.0
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	gopkg.in/yaml.v2 v2.4.0
 )
 
-require (
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
-	github.com/go-playground/validator/v10 v10.11.2 // indirect
-	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
-)
+require github.com/go-playground/validator/v10 v10.11.2 // indirect
 
 require (
 	github.com/bytedance/sonic v1.8.0 // indirect
@@ -31,7 +28,7 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.9 // indirect
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
-	golang.org/x/crypto v0.9.0 // indirect
+	golang.org/x/crypto v0.9.0
 	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/sys v0.8.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
